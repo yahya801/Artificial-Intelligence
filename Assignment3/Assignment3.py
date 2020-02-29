@@ -15,17 +15,16 @@ def tostring():
             print()
 
 def populationgeneration(population):
-    populationsize = 8
+    populationsize = 2
     
     print(populationsize)
     
-    for i in range(1,populationsize+1):
-        population.append(i)
     
-    for i in range(len(population)):
-    #   a = population.index()
-
-        population[i] = [random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)] 
+    
+    for i in range(1,populationsize+1):
+        queenpos.append([random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)])
+        fillboard(8,board)
+        population.append( )
         
       
    # population[1] =random.randint(1,8),random.randint(1,8)}
@@ -43,6 +42,9 @@ def fillboard(size,board,no):
 
 
 
+
+
+
                 
 
     
@@ -54,6 +56,7 @@ def fillboard(size,board,no):
 
 global populationsize
 board =[]
+queenpos = []
 size = 8
 population = []
 boardmaking(size,board)
@@ -61,6 +64,6 @@ tostring()
 populationgeneration(population)
 a= random.randint(0,7)
 print(a+1)
-fillboard(size,board,a)
+#fillboard(size,board,a)
 
 tostring()          
