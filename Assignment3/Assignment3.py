@@ -14,9 +14,9 @@ def tostring():
                 print(val, end=" ")
             print()
 
-def populationgeneration():
-    populationsize = random.randint(1,8)
-    population = []
+def populationgeneration(population):
+    populationsize = 8
+    
     print(populationsize)
     
     for i in range(1,populationsize+1):
@@ -25,16 +25,42 @@ def populationgeneration():
     for i in range(len(population)):
     #   a = population.index()
 
-        population[i] = i+1, [random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)]  
+        population[i] = [random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)] 
         
       
    # population[1] =random.randint(1,8),random.randint(1,8)}
     print(population)
+
+
+def fillboard(size,board,no):
+    for i in range(size):
+        value = population[no]
+        #print(value)
+        for j in range(size):
+           # print(i,value[j])
+            if i+1 == value[j]:
+               board[i][j]= 'F'
+
+
+
+                
+
     
 
 
 
+       
+        
+
+global populationsize
 board =[]
-boardmaking(8,board)
+size = 8
+population = []
+boardmaking(size,board)
 tostring()
-populationgeneration()
+populationgeneration(population)
+a= random.randint(0,7)
+print(a+1)
+fillboard(size,board,a)
+
+tostring()          
