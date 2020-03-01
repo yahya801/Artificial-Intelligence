@@ -23,7 +23,7 @@ def populationgeneration(population):
     
     for i in range(1,populationsize+1):
         queenpos.append([random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)])
-        fillboard(8,board)
+        fillboard(8,board,2)
         population.append( )
         
       
