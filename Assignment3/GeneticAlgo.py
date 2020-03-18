@@ -29,8 +29,8 @@ def populationgen():
     print(population)   
 
 def RWS():
-    a = random.randint(0,8)
-    b = random.randint(0,8)
+    a = random.randint(0,7)
+    b = random.randint(0,7)
     p1F,p1 = population[a]
     p2F,p2 = population[b]
     print(p1F,p1)
@@ -102,6 +102,87 @@ def fitnesscalc(array,board):
     return fitness
 
 
+def roulwheel():
+    sum = 0
+    fitt= 0
+    for i in range(len(population)):
+       fit,c = population[i]
+       sum+= fit
+    for i in range(len(population)):
+       fit,chr = population[i]
+       fitness = round((fit/sum) ,2)
+       fitt +=fitness
+       probabilities.append(fitt)
+    print(probabilities)
+  #  while len(parents) <= 1:
+    for i in range(0,2):
+        r = round(random.random(),2)
+        print(r)
+        for j in range(len(population)):
+            fit,chr = population[j]
+            if r <= probabilities[j] and len(parents) <  2:
+                probabilities[j] = -1
+               
+                parents.append(list(chr))
+                break
+            else:
+                j-=1
+        print(probabilities)
+    return parents
+
+def crossover():
+    offspring1=[]
+    offspring2=[]
+    parent1 = parents[0]
+    parent2= parents[1]
+   # print(parent1,parent2)\
+    for i in range(len(parent1)):
+        if i < 4:
+            offspring1.append(parent1[i])
+            offspring2.append(parent2[i]) 
+        else:
+            offspring1.append(parent2[i])
+            offspring2.append(parent1[i]) 
+    return offspring1,offspring2
+
+
+def mutation(array):
+  
+   # print(offspringbin)
+
+    r = random.randint(0,7)
+    print(r)
+    ranint = bin(array[r])
+    print(ranint,'ran')
+    if (len(ranint) == 3):
+        templist = list(ranint)
+        print(templist)
+        if templist[2] == '1':
+            templist[2] = '0'
+        else:
+            templist[2] = '1'
+        ranint = ''.join(templist)   
+        print(ranint,"HHHH")
+        ranint = int(ranint,2)
+        print(ranint)
+
+
+
+
+
+        
+           
+ 
+                      
+
+
+
+
+
+    
+       
+   
+
             
           
     
@@ -132,6 +213,8 @@ def fillboard(array):
 
 
 population =[]
+parents=[]
+probabilities=[]
 board =[]
 queenpos = []
 makeboard(board)
@@ -139,3 +222,6 @@ makeboard(board)
 print()
 populationgen()
 RWS()
+print(roulwheel())
+offspring1,offspring2 =crossover()
+mutation(offspring1)
