@@ -2,226 +2,278 @@ import random
 
 
 def makeboard(board):
-   
-   board.clear()
-   for i in range(8):
-        board.append([0 for i in range(0,8)])
+
+    board.clear()
+    for i in range(8):
+        board.append([0 for i in range(0, 8)])
+
 
 def tostring():
     for row in board:
-            for val in row:
-                print(val, end=" ")
-            print()
+        for val in row:
+            print(val, end=" ")
+        print()
 
 
 def populationgen():
-    for i in range(0,8):
-        queenpos.append([random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8),random.randint(1,8)])
+    for i in range(0, 8):
+        queenpos.append([random.randint(1, 8), random.randint(1, 8), random.randint(1, 8), random.randint(
+            1, 8), random.randint(1, 8), random.randint(1, 8), random.randint(1, 8), random.randint(1, 8)])
         makeboard(board)
         fillboard(queenpos[i])
-        fitness = fitnesscalc(queenpos[i],board)
-        population.append((fitness,queenpos[i]))
-      #  print(population)
-        print('fitness =',fitness)
-        tostring()
-        print()
+        fitness = fitnesscalc(queenpos[i], board)
+        population.append((fitness, queenpos[i]))
     population.sort()
-    print(population)   
+   # print(population,'generation')
 
-def RWS():
-    a = random.randint(0,7)
-    b = random.randint(0,7)
-    p1F,p1 = population[a]
-    p2F,p2 = population[b]
-    print(p1F,p1)
-    print(p2F,p2)
-    
-    
-
-
-       
-               
-  #  print(fitness)
-def fitnesscalc(array,board):
+def fitnesscalc(array, board):
     # Row Clash
     clash = []
     for i in range(len(array)):
         c = 0
         value = array[i]
         for j in range(len(array)):
-            if board[value-1][j] =='F':
+            if board[value-1][j] == 'F':
                 if i != j:
-                    c+=1
+                    c += 1
         clash.append(c)
-    #Diagonal Clash
-        #right up
+    # Diagonal Clash
+        # right up
         row = value-1
         column = i
         for j in range(len(array)):
             if row > 0 and column < 7:
                 if row+1 != value:
-                   if board[row][column]=='F':
-                       clash[i] = clash[i]+1  
-            row-=1
-            column+=1   
+                    if board[row][column] == 'F':
+                        clash[i] = clash[i]+1
+            row -= 1
+            column += 1
     #   #right down
         row = value-1
         column = i
         for j in range(len(array)):
             if row < 7 and column < 7:
                 if row+1 != value:
-                   if board[row][column]=='F':
-                       clash[i] = clash[i]+1  
-            row+=1
-            column+=1 
-        #left down
+                    if board[row][column] == 'F':
+                        clash[i] = clash[i]+1
+            row += 1
+            column += 1
+        # left down
         row = value-1
         column = i
         for j in range(len(array)):
             if row < 7 and column > 0:
                 if row+1 != value:
-                   if board[row][column]=='F':
-                       clash[i] = clash[i]+1  
-            row+=1
-            column-=1 
-        #left up
+                    if board[row][column] == 'F':
+                        clash[i] = clash[i]+1
+            row += 1
+            column -= 1
+        # left up
         row = value-1
         column = i
         for j in range(len(array)):
             if row > 0 and column > 0:
                 if row+1 != value:
-                   if board[row][column]=='F':
-                       clash[i] = clash[i]+1  
-            row-=1
-            column-=1 
-    print(clash) 
+                    if board[row][column] == 'F':
+                        clash[i] = clash[i]+1
+            row -= 1
+            column -= 1
+   
     fitness = 0
     for k in range(len(clash)):
         if clash[k] == 0:
-            fitness+=1
+            fitness += 1
     return fitness
 
 
 def roulwheel():
+    parents.clear()
+    probabilities.clear()
+
     sum = 0
-    fitt= 0
+    fitt = 0
+   # print(range(len(population)),'range')
+   
     for i in range(len(population)):
-       fit,c = population[i]
-       sum+= fit
+        
+        fit, c = population[i]
+        sum += fit
+        if(sum== 0):
+            sum=0.2
     for i in range(len(population)):
-       fit,chr = population[i]
-       fitness = round((fit/sum) ,2)
-       fitt +=fitness
-       probabilities.append(fitt)
-    print(probabilities)
-  #  while len(parents) <= 1:
-    for i in range(0,2):
-        r = round(random.random(),2)
-        print(r)
-        for j in range(len(population)):
-            fit,chr = population[j]
-            if r <= probabilities[j] and len(parents) <  2:
-                probabilities[j] = -1
-               
-                parents.append(list(chr))
-                break
-            else:
-                j-=1
-        print(probabilities)
-    return parents
+        fit, chr = population[i]
+        fitness = round((fit/sum), 2)
+       
+        fitt += fitness
+        probabilities.append(fitt)
+    
+
+    p1 = random.choice(probabilities)
+    for i in range(len(probabilities)):
+        if (p1 == probabilities[i]):
+          #  print(i,'i')
+            fit, chr = population[i]
+            parents.append(list(chr))
+            break
+
+    p2 = random.choice(probabilities)
+    while(p2 == p1):
+        p2 = random.choice(probabilities)
+    for i in range(len(probabilities)):
+        if (p2 == probabilities[i]):
+            fit, chr = population[i]
+            parents.append(list(chr))
+            break
+
 
 def crossover():
-    offspring1=[]
-    offspring2=[]
+    offspring1 = []
+    offspring2 = []
     parent1 = parents[0]
-    parent2= parents[1]
-   # print(parent1,parent2)\
+    parent2 = parents[1]
     for i in range(len(parent1)):
         if i < 4:
             offspring1.append(parent1[i])
-            offspring2.append(parent2[i]) 
+            offspring2.append(parent2[i])
         else:
             offspring1.append(parent2[i])
-            offspring2.append(parent1[i]) 
-    return offspring1,offspring2
+            offspring2.append(parent1[i])
+    return offspring1, offspring2
 
 
 def mutation(array):
-  
-   # print(offspringbin)
-
-    r = random.randint(0,7)
-    print(r)
-    ranint = bin(array[r])
-    print(ranint,'ran')
-    if (len(ranint) == 3):
-        templist = list(ranint)
-        print(templist)
-        if templist[2] == '1':
-            templist[2] = '0'
-        else:
-            templist[2] = '1'
-        ranint = ''.join(templist)   
-        print(ranint,"HHHH")
-        ranint = int(ranint,2)
-        print(ranint)
-
-
-
-
-
-        
-           
- 
-                      
-
-
-
-
-
-    
+    child = []
+    for i in range(0, 2):
+        r = random.randint(0, 7)
        
+        ranint = bin(array[r])
+
+        if (len(ranint) == 3):
+            templist = list(ranint)
+            templist.append('1')
+            
+            ranint = ''.join(templist)
+            
+            ranint = int(ranint, 2)
+            
+
+        elif (len(ranint) == 4):
+            templist = list(ranint)
+           
+            r = random.randint(2, 3)
+        
+            if r != 2 or r == 3:
+                if templist[r] == '0':
+                    templist[r] = '1'
+                else:
+                    templist[r] = '0'
+            else:
+                templist.append('1')
+            ranint = ''.join(templist)
+           
+            ranint = int(ranint, 2)
+           
+
+        elif (len(ranint) == 5):
+            templist = list(ranint)
+           
+            if templist[3] == '0':
+                templist[3] = '1'
+            else:
+                templist[3] = '0'
+            if templist[4] == '0':
+                templist[4] = '1'
+            else:
+                templist[4] = '0'
+
+            ranint = ''.join(templist)
+           
+            ranint = int(ranint, 2)
+            
+
+        elif (len(ranint) == 6):
+            templist = list(ranint)
+           
+            if templist[2] == '1':
+                templist[2] = '0'
+                a = random.randint(3, 5)
+                if templist[a] == '0':
+                    templist[a] = '1'
+                b = random.randint(3, 5)
+                if templist[b] == '0':
+                    templist[b] = '1'
+            ranint = ''.join(templist)
+            
+            ranint = int(ranint, 2)
+       
+     
+
+        array[r] = ranint
    
-
-            
-          
-    
-
-
-
-
-
-            
-      
-
-
-
-
-
+    child = (array)
+    return child
 
 
 def fillboard(array):
     for i in range(8):
         for j in range(8):
             if i+1 == array[j]:
-               board[i][j]= 'F'
-             #  print(i,j)
+                board[i][j] = 'F'
+           
 
 
+def geneticalgo():
+    populationgen()
+    chromosome=[]
+    fit= 0
+    i = 0
+    while (fit < 4):
+        if (len(population)> 75):
+            population.pop()
+        print('iteration =',i)
+        
+        roulwheel()
+        offspring1, offspring2 = crossover()
+      #  print(offspring1, offspring2,'offsprings')
+        newpop1 = mutation(offspring1)
+        newpop2 = mutation(offspring2)
+        makeboard(board)
+        fillboard(newpop1)
+        fitness = fitnesscalc(newpop1, board)
+       # print(fitness)
+        offspring = (fitness,newpop1)
+        makeboard(board)
+        fillboard(offspring2)
+        fitness2 = fitnesscalc(newpop2, board)
+       # print(fitness2)
+        if(fitness > fitness2):
+          #  print('helllo')
+            population.append(offspring)
+            fit = fitness
+        else:
+            offspring = (fitness2,newpop2)
+            population.append(offspring)
+            fit = fitness2
+
+        a,chromosome = offspring
+       # print(fit)
+        population.sort()
+        i+=1
+       
+
+    
+    # newpop2 = mutation(offspring2)
+    # population.append(newpop2)
+    print(chromosome)
+  #  print(population)
 
 
-
-
-population =[]
-parents=[]
-probabilities=[]
-board =[]
+population = []
+parents = []
+probabilities = []
+board = []
 queenpos = []
-makeboard(board)
-#tostring()
-print()
-populationgen()
-RWS()
-print(roulwheel())
-offspring1,offspring2 =crossover()
-mutation(offspring1)
+# makeboard(board)
+# tostring()
+
+geneticalgo()
